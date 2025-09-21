@@ -3,23 +3,15 @@
 import os
 from PyInstaller.utils.hooks import collect_data_files
 
-# Собираем данные Streamlit
-streamlit_datas = collect_data_files('streamlit')
-
 a = Analysis(
-    ['main.py'],
+    ['web_app.py'],
     pathex=[os.path.abspath('.')],
     binaries=[],
     datas=[
-        *streamlit_datas,
         ('app', 'app'),  # Включаем всю папку app
     ],
     hiddenimports=[
-        'streamlit',
-        'streamlit.web.cli',
-        'streamlit.web.server',
-        'streamlit.runtime.scriptrunner',
-        'streamlit.runtime.state',
+        'flask',
         'app.optim.methods',
         'app.optim.selection', 
         'app.visualize',
@@ -27,13 +19,11 @@ a = Analysis(
         'sympy',
         'matplotlib',
         'matplotlib.backends.backend_agg',
-        'pandas',
-        'altair',
-        'toml',
-        'packaging',
-        'watchdog',
-        'git',
-        'pydeck',
+        'matplotlib.pyplot',
+        'io',
+        'base64',
+        'json',
+        'traceback',
     ],
     hookspath=[],
     hooksconfig={},
@@ -52,7 +42,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='optimization_app',
+    name='optimization_web_app',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
