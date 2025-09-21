@@ -226,6 +226,8 @@ def index():
         x0 = float(request.form.get('x0', 0)) if request.form.get('x0') else None
         x1 = float(request.form.get('x1', 1)) if request.form.get('x1') else None
         prefer_method = request.form.get('prefer_method', 'auto')
+        if prefer_method == 'auto':
+            prefer_method = None
         
         # Создаем функции
         f_callable = make_callable(function_str)
