@@ -23,7 +23,7 @@ streamlit run app/app.py
 run_optimization.bat
 
 # Или прямой запуск
-dist\optimization_proxy.exe
+dist\optimization_web_app.exe
 ```
 
 ## Структура проекта
@@ -32,5 +32,5 @@ dist\optimization_proxy.exe
 - `app/optim/selection.py` — выбор подходящего метода
 - `app/visualize.py` — вспомогательная визуализация итераций
 - `main.py` — точка входа для Python
-- `proxy_app.py` — прокси-приложение для exe
-- `dist/optimization_proxy.exe` — готовый исполняемый файл
+- `web_app.py` — Flask веб-приложение для exe
+- `dist/optimization_web_app.exe` — готовый исполняемый файл

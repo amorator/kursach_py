@@ -8,12 +8,12 @@ pip install pyinstaller
 
 ## Сборка в один файл
 
-### Прокси-приложение (рекомендуется)
+### Flask веб-приложение (рекомендуется)
 ```bash
-pyinstaller optimization_proxy.spec
+pyinstaller web_app.spec
 ```
-Затем запустите: `dist/optimization_proxy.exe`
-Откройте браузер: http://localhost:8501
+Затем запустите: `dist/optimization_web_app.exe`
+Откройте браузер: http://localhost:5000
 
 ## Простой запуск
 Используйте bat файл:
@@ -23,24 +23,24 @@ run_optimization.bat
 
 ## Альтернативная сборка (простая команда)
 ```bash
-pyinstaller --onefile --name optimization_proxy proxy_app.py --add-data "app;app"
+pyinstaller --onefile --name optimization_web_app web_app.py --add-data "app;app" --hidden-import flask --hidden-import matplotlib.backends.backend_agg
 ```
 
 ## Запуск собранного приложения
 ```bash
-# Прокси-приложение (работает стабильно)
-dist/optimization_proxy.exe
+# Flask веб-приложение (работает стабильно)
+dist/optimization_web_app.exe
 ```
 
 ## Возможные проблемы и решения
 
 ### 1. Streamlit не работает в exe
-- **Решение**: Используйте прокси-приложение (proxy_app.py)
-- Прокси запускает Streamlit через системный Python
+- **Решение**: Используйте Flask веб-приложение (web_app.py)
+- Flask полностью самодостаточен в exe файле
 
 ### 2. Отсутствующие модули
 Если приложение не запускается, добавьте в hiddenimports:
-- `streamlit`
+- `flask`
 - `matplotlib.backends.backend_agg`
 - `app.optim.methods`
 - `app.optim.selection`
@@ -56,13 +56,13 @@ dist/optimization_proxy.exe
 
 ## Тестирование сборки
 ```bash
-# Прокси-приложение
-dist/optimization_proxy.exe
-# Откройте http://localhost:8501 в браузере
+# Flask веб-приложение
+dist/optimization_web_app.exe
+# Откройте http://localhost:5000 в браузере
 ```
 
 ## Рекомендации
 
-- **Для exe файла**: Используйте прокси-приложение - оно стабильно работает
+- **Для exe файла**: Используйте Flask веб-приложение - оно стабильно работает
 - **Для разработки**: Используйте Streamlit версию - более удобный интерфейс
-- **Для курсовой**: Прокси-приложение подходит для демонстрации функциональности
+- **Для курсовой**: Flask веб-приложение подходит для демонстрации функциональности
