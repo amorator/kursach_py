@@ -3,53 +3,44 @@
 ## Установка зависимостей
 ```bash
 pip install -r requirements.txt
-pip install pyinstaller flask
+pip install pyinstaller
 ```
 
 ## Сборка в один файл
 
-### Вариант 1: Flask веб-приложение (рекомендуется)
+### Прокси-приложение (рекомендуется)
 ```bash
-pyinstaller web_app.spec
+pyinstaller optimization_proxy.spec
 ```
-Затем запустите: `dist/optimization_web_app.exe`
-Откройте браузер: http://localhost:5000
-
-### Вариант 2: Streamlit приложение (может не работать)
-```bash
-pyinstaller launcher.spec
-```
-Затем запустите: `dist/optimization_app.exe`
+Затем запустите: `dist/optimization_proxy.exe`
+Откройте браузер: http://localhost:8501
 
 ## Простой запуск
 Используйте bat файл:
 ```bash
-run_optimization_app.bat
+run_optimization.bat
 ```
 
 ## Альтернативная сборка (простая команда)
 ```bash
-pyinstaller --onefile --name optimization_web_app web_app.py --hidden-import flask --hidden-import app.optim.methods --hidden-import app.optim.selection --hidden-import app.visualize
+pyinstaller --onefile --name optimization_proxy proxy_app.py --add-data "app;app"
 ```
 
 ## Запуск собранного приложения
 ```bash
-# Flask веб-приложение (работает стабильно)
-dist/optimization_web_app.exe
-
-# Streamlit приложение (может не работать)
-dist/optimization_app.exe
+# Прокси-приложение (работает стабильно)
+dist/optimization_proxy.exe
 ```
 
 ## Возможные проблемы и решения
 
 ### 1. Streamlit не работает в exe
-- **Решение**: Используйте Flask версию (web_app.py)
-- Flask более совместим с PyInstaller
+- **Решение**: Используйте прокси-приложение (proxy_app.py)
+- Прокси запускает Streamlit через системный Python
 
 ### 2. Отсутствующие модули
 Если приложение не запускается, добавьте в hiddenimports:
-- `flask`
+- `streamlit`
 - `matplotlib.backends.backend_agg`
 - `app.optim.methods`
 - `app.optim.selection`
@@ -65,16 +56,13 @@ dist/optimization_app.exe
 
 ## Тестирование сборки
 ```bash
-# Flask приложение
-dist/optimization_web_app.exe
-# Откройте http://localhost:5000 в браузере
-
-# Streamlit приложение (если работает)
-dist/optimization_app.exe
+# Прокси-приложение
+dist/optimization_proxy.exe
+# Откройте http://localhost:8501 в браузере
 ```
 
 ## Рекомендации
 
-- **Для exe файла**: Используйте Flask версию - она стабильно работает
+- **Для exe файла**: Используйте прокси-приложение - оно стабильно работает
 - **Для разработки**: Используйте Streamlit версию - более удобный интерфейс
-- **Для курсовой**: Flask версия подходит для демонстрации функциональности
+- **Для курсовой**: Прокси-приложение подходит для демонстрации функциональности
