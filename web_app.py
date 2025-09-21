@@ -8,6 +8,8 @@ import sys
 import os
 import base64
 import io
+import signal
+import threading
 from flask import Flask, render_template_string, request
 import matplotlib
 matplotlib.use('Agg')  # Используем неинтерактивный бэкенд
@@ -29,6 +31,19 @@ from optim.methods import OptimizationResult, passive_search, dichotomy, golden_
 from optim.selection import auto_select_and_run
 
 app = Flask(__name__)
+
+# Глобальная переменная для контроля завершения
+shutdown_flag = threading.Event()
+
+def signal_handler(signum, frame):
+    """Обработчик сигналов для корректного завершения."""
+    print("\nПолучен сигнал завершения. Остановка сервера...")
+    shutdown_flag.set()
+    sys.exit(0)
+
+# Регистрируем обработчики сигналов
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -299,4 +314,14 @@ def index():
 if __name__ == '__main__':
     print("Запуск веб-приложения...")
     print("Откройте браузер и перейдите по адресу: http://localhost:5000")
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    print("Нажмите Ctrl+C для остановки")
+    
+    try:
+        app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+    except KeyboardInterrupt:
+        print("\nОстановка сервера...")
+    except Exception as e:
+        print(f"Ошибка сервера: {e}")
+    finally:
+        print("Сервер остановлен")
+        sys.exit(0)
