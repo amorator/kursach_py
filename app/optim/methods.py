@@ -20,6 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, List, Tuple, Optional, Dict, Any
 import numpy as np
+import time
 
 
 @dataclass
@@ -38,6 +39,8 @@ class OptimizationResult:
 			обычно содержит текущий интервал или точку и значение функции.
 		method: str
 			Название использованного метода.
+		execution_time: float
+			Время выполнения в секундах.
 	"""
 
 	x_min: float
@@ -45,6 +48,7 @@ class OptimizationResult:
 	iterations: int
 	history: List[Dict[str, Any]]
 	method: str
+	execution_time: float
 
 
 def passive_search(
@@ -80,6 +84,7 @@ def passive_search(
 	if samples < 2:
 		raise ValueError("Число проб должно быть >= 2")
 
+	start_time = time.time()
 	xs = np.linspace(a, b, samples)
 	history: List[Dict[str, Any]] = []
 	f_vals = []
@@ -91,12 +96,15 @@ def passive_search(
 	idx = int(np.argmin(f_vals))
 	x_min = float(xs[idx])
 	f_min = float(f_vals[idx])
+	execution_time = time.time() - start_time
+	
 	return OptimizationResult(
 		x_min=x_min,
 		f_min=f_min,
 		iterations=samples,
 		history=history,
 		method="Пассивный поиск",
+		execution_time=execution_time,
 	)
 
 
@@ -143,6 +151,7 @@ def dichotomy(
 	if delta <= 0:
 		raise ValueError("delta должен быть > 0")
 
+	start_time = time.time()
 	history: List[Dict[str, Any]] = []
 	iterations = 0
 	while (b - a) > tol and iterations < max_iter:
@@ -161,12 +170,15 @@ def dichotomy(
 	x_min = (a + b) / 2.0
 	f_min = float(f(x_min))
 	history.append({"a": a, "b": b, "x": x_min, "f": f_min})
+	execution_time = time.time() - start_time
+	
 	return OptimizationResult(
 		x_min=x_min,
 		f_min=f_min,
 		iterations=iterations,
 		history=history,
 		method="Дихотомия",
+		execution_time=execution_time,
 	)
 
 
@@ -203,6 +215,7 @@ def golden_section(
 	if tol <= 0:
 		raise ValueError("tol должен быть > 0")
 
+	start_time = time.time()
 	phi = (1 + 5 ** 0.5) / 2
 	resphi = 2 - phi
 
@@ -228,12 +241,15 @@ def golden_section(
 	x_min = (a + b) / 2
 	f_min = float(f(x_min))
 	history.append({"a": a, "b": b, "x": x_min, "f": f_min})
+	execution_time = time.time() - start_time
+	
 	return OptimizationResult(
 		x_min=x_min,
 		f_min=f_min,
 		iterations=iterations,
 		history=history,
 		method="Золотое сечение",
+		execution_time=execution_time,
 	)
 
 
@@ -275,6 +291,7 @@ def newton_tangent(
 	if d2f is None:
 		raise ValueError("Для метода касательных требуется d2f (вторая производная)")
 
+	start_time = time.time()
 	history: List[Dict[str, Any]] = []
 	x = float(x0)
 	for _ in range(max_iter):
@@ -294,12 +311,15 @@ def newton_tangent(
 
 	x_min = x
 	f_min = float(f(x_min))
+	execution_time = time.time() - start_time
+	
 	return OptimizationResult(
 		x_min=x_min,
 		f_min=f_min,
 		iterations=len(history),
 		history=history,
 		method="Касательных (Ньютона)",
+		execution_time=execution_time,
 	)
 
 
@@ -347,6 +367,7 @@ def secant_on_gradient(
 			return float(df(x))
 		return float((f(x + h_fd) - f(x - h_fd)) / (2.0 * h_fd))
 
+	start_time = time.time()
 	history: List[Dict[str, Any]] = []
 
 	x_prev = float(x0)
@@ -369,10 +390,13 @@ def secant_on_gradient(
 
 	x_min = x_curr
 	f_min = float(f(x_min))
+	execution_time = time.time() - start_time
+	
 	return OptimizationResult(
 		x_min=x_min,
 		f_min=f_min,
 		iterations=len(history),
 		history=history,
 		method="Секущих (по производной)",
+		execution_time=execution_time,
 	)
